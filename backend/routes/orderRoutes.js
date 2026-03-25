@@ -1,19 +1,37 @@
 const express = require('express');
 const router = express.Router();
-const Order = require('../models/Order');
+const { Order, OrderItem, MenuItem, User } = require('../models');
 const { auth, admin } = require('../middleware/auth');
 
 // Create a new order
 router.post('/', auth, async (req, res) => {
     try {
         const { items, totalAmount, address } = req.body;
-        const order = new Order({
-            user: req.user.id,
-            items,
+        
+        const order = await Order.create({
+            userId: req.user.id,
             totalAmount,
             address,
         });
-        const newOrder = await order.save();
+
+        // Insert order items
+        for (const item of items) {
+            await OrderItem.create({
+                orderId: order.id,
+                menuItemId: item.menuItem, // Assuming frontend passes menuItem ID
+                quantity: item.quantity,
+            });
+        }
+
+        // Fetch back with items
+        const newOrder = await Order.findByPk(order.id, {
+            include: [{
+                model: OrderItem,
+                as: 'items',
+                include: [{ model: MenuItem, as: 'menuItem' }]
+            }]
+        });
+
         res.status(201).json(newOrder);
     } catch (err) {
         res.status(400).json({ message: err.message });
@@ -23,7 +41,15 @@ router.post('/', auth, async (req, res) => {
 // Get user orders
 router.get('/my-orders', auth, async (req, res) => {
     try {
-        const orders = await Order.find({ user: req.user.id }).populate('items.menuItem');
+        const orders = await Order.findAll({
+            where: { userId: req.user.id },
+            include: [{
+                model: OrderItem,
+                as: 'items',
+                include: [{ model: MenuItem, as: 'menuItem' }]
+            }],
+            order: [['createdAt', 'DESC']]
+        });
         res.json(orders);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -33,7 +59,17 @@ router.get('/my-orders', auth, async (req, res) => {
 // Admin: Get all orders
 router.get('/all', auth, admin, async (req, res) => {
     try {
-        const orders = await Order.find().populate('user', 'name email').populate('items.menuItem');
+        const orders = await Order.findAll({
+            include: [
+                { model: User, attributes: ['name', 'email'] },
+                {
+                    model: OrderItem,
+                    as: 'items',
+                    include: [{ model: MenuItem, as: 'menuItem' }]
+                }
+            ],
+            order: [['createdAt', 'DESC']]
+        });
         res.json(orders);
     } catch (err) {
         res.status(500).json({ message: err.message });

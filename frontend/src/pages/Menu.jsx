@@ -52,7 +52,7 @@ const Menu = () => {
             <div className="food-grid">
                 {filteredItems.length > 0 ? (
                     filteredItems.map(item => (
-                        <FoodCard key={item._id} item={item} />
+                        <FoodCard key={item.id} item={item} />
                     ))
                 ) : (
                     <p className="empty-msg">No items found in this category.</p>

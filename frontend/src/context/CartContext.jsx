@@ -16,7 +16,7 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = (item) => {
         setCart(prev => {
-            const existing = prev.findIndex(i => i._id === item._id);
+            const existing = prev.findIndex(i => i.id === item.id);
             if (existing !== -1) {
                 const updatedCart = [...prev];
                 updatedCart[existing] = {
@@ -31,12 +31,12 @@ export const CartProvider = ({ children }) => {
     };
 
     const removeFromCart = (itemId) => {
-        setCart(prev => prev.filter(i => i._id !== itemId));
+        setCart(prev => prev.filter(i => i.id !== itemId));
     };
 
     const updateQuantity = (itemId, q) => {
         if (q < 1) return removeFromCart(itemId);
-        setCart(prev => prev.map(i => i._id === itemId ? { ...i, quantity: q } : i));
+        setCart(prev => prev.map(i => i.id === itemId ? { ...i, quantity: q } : i));
     };
 
     const clearCart = () => setCart([]);

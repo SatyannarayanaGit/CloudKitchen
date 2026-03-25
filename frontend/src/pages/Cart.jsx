@@ -22,18 +22,18 @@ const Cart = () => {
             <div className="cart-content">
                 <div className="cart-items">
                     {cart.map(item => (
-                        <div key={item._id} className="cart-item glass-card">
+                        <div key={item.id} className="cart-item glass-card">
                             <img src={item.image} alt={item.name} className="item-img" />
                             <div className="item-details">
                                 <h3>{item.name}</h3>
                                 <p className="item-price">&#8377;{item.price}</p>
                                 <div className="quantity-controls">
-                                    <button onClick={() => updateQuantity(item._id, item.quantity - 1)}>-</button>
+                                    <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
                                     <span>{item.quantity}</span>
-                                    <button onClick={() => updateQuantity(item._id, item.quantity + 1)}>+</button>
+                                    <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
                                 </div>
                             </div>
-                            <button className="btn-remove" onClick={() => removeFromCart(item._id)}>&times;</button>
+                            <button className="btn-remove" onClick={() => removeFromCart(item.id)}>&times;</button>
                         </div>
                     ))}
                 </div>

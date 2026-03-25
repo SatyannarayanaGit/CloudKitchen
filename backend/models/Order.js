@@ -1,16 +1,30 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-const orderSchema = new mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    items: [
-        {
-            menuItem: { type: mongoose.Schema.Types.ObjectId, ref: 'MenuItem', required: true },
-            quantity: { type: Number, required: true },
-        }
-    ],
-    totalAmount: { type: Number, required: true },
-    status: { type: String, enum: ['pending', 'processing', 'out-for-delivery', 'delivered', 'cancelled'], default: 'pending' },
-    address: { type: String, required: true },
-}, { timestamps: true });
+const Order = sequelize.define('Order', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    totalAmount: { 
+        type: DataTypes.FLOAT, 
+        allowNull: false 
+    },
+    status: { 
+        type: DataTypes.ENUM('pending', 'processing', 'out-for-delivery', 'delivered', 'cancelled'), 
+        defaultValue: 'pending' 
+    },
+    address: { 
+        type: DataTypes.TEXT, 
+        allowNull: false 
+    },
+}, {
+    timestamps: true,
+});
 
-module.exports = mongoose.model('Order', orderSchema);
+module.exports = Order;

@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-const MenuItem = require('./models/MenuItem');
+const { sequelize, MenuItem } = require('./models');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -44,9 +43,10 @@ const menuItems = [
 
 const seedDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/cloud-kitchen');
-        await MenuItem.deleteMany();
-        await MenuItem.insertMany(menuItems);
+        await sequelize.authenticate();
+        await sequelize.sync(); // ensure tables exist
+        await MenuItem.destroy({ where: {} });
+        await MenuItem.bulkCreate(menuItems);
         console.log('Database Seeded Successfully with Veg Rice Dishes!');
         process.exit();
     } catch (err) {

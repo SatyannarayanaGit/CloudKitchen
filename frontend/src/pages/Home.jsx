@@ -27,7 +27,7 @@ const Home = () => {
                 <div className="food-grid">
                     {featuredItems.length > 0 ? (
                         featuredItems.map(item => (
-                            <FoodCard key={item._id} item={item} />
+                            <FoodCard key={item.id} item={item} />
                         ))
                     ) : (
                         <p className="loading-text">Bringing you the best flavors...</p>
