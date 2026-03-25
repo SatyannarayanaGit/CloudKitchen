@@ -1,0 +1,26 @@
+.home-page {
+    padding-bottom: 100px;
+}
+
+.featured-section {
+    padding-top: 80px;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.food-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.loading-text {
+    text-align: center;
+    grid-column: 1 / -1;
+    color: var(--text-muted);
+    font-style: italic;
+}
