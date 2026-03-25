@@ -8,7 +8,7 @@ const FoodCard = ({ item }) => {
     return (
         <div className="food-card glass-card">
             <div className="food-image">
-                <img src={item.image} alt={item.name} />
+                <img src={item.image} alt={item.image} />
                 <span className="category-badge">{item.category}</span>
             </div>
             <div className="food-info">
